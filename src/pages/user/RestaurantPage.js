@@ -1,18 +1,19 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Link, redirect, useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import ReactModal from "react-modal";
 import { restaurantApi } from "../../api/restaurantApi";
 import { orderApi } from "../../api/orderApi";
 import HoursOfOperation from "../../components/HoursOfOp";
 import { AuthContext } from "../../context/AuthContext";
 import MenuItemCard from "../../components/RestaurantPage/MenuItemCard";
+import { toast } from "react-toastify";
+import Loading from "../../assets/loading2svg.svg";
 
 ReactModal.setAppElement("#root");
 const RestaurantPage = () => {
   const { restaurantId } = useParams();
 
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
   const [restaurantDetails, setRestaurantDetails] = useState({});
   const [cart, setCart] = useState({});
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -45,7 +46,7 @@ const RestaurantPage = () => {
       const restaurant = (await restaurantApi.getRestaurantById(id)).data;
       setRestaurantDetails(restaurant);
     } catch (error) {
-      setError(error);
+      toast.error(error.response.data);
     } finally {
       setIsLoading(false);
     }
@@ -82,7 +83,7 @@ const RestaurantPage = () => {
       navigate("/");
       console.log(response);
     } catch (error) {
-      setError(error);
+      toast.error(error.response.data);
     } finally {
       setIsLoading(false);
     }
@@ -189,6 +190,11 @@ const RestaurantPage = () => {
         )}
       </div>
       <div className="flex flex-col items-center justify-center pb-20">
+        {isLoading && (
+          <div className="flex justify-center items-center">
+            <img src={Loading} alt="Loading" />
+          </div>
+        )}
         {restaurantDetails?.menuItems?.map((item, index) => (
           <MenuItemCard key={index} item={item} cart={cart} handleDecrement={handleDecrement} handleIncrement={handleIncrement} handlePlusMinusClick={handlePlusMinusClick} />
         ))}

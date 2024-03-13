@@ -9,8 +9,9 @@ import { userApi } from "../../api/userApi";
 import { AuthContext } from "../../context/AuthContext";
 import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import { useForm } from "react-hook-form";
+import Loading from "../../assets/loading.gif";
 const Login = () => {
   const [isLogin, setIsLogin] = useState(true);
   const {
@@ -19,11 +20,12 @@ const Login = () => {
     watch,
     formState: { errors },
   } = useForm();
-
+  const [isLoading, setIsLoading] = useState(false);
   const password = watch("password");
   const navigate = useNavigate();
   const { login } = useContext(AuthContext);
   const loginUser = async (data) => {
+    setIsLoading(true);
     try {
       const response = await userApi.loginUser({
         ...data,
@@ -32,9 +34,12 @@ const Login = () => {
       navigate("/");
     } catch (error) {
       toast.error(error.response.data);
+    } finally {
+      setIsLoading(false);
     }
   };
   const signUpUser = async (data) => {
+    setIsLoading(true);
     try {
       const response = await userApi.registerUser({
         ...data,
@@ -45,6 +50,8 @@ const Login = () => {
       navigate("/");
     } catch (error) {
       toast.error(error.response.data);
+    } finally {
+      setIsLoading(false);
     }
   };
   const onSubmit = (data) => {
@@ -231,7 +238,12 @@ const Login = () => {
                       <button
                         onClick={handleSubmit(onSubmit)}
                         className="w-full flex mt-2 justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                        {isLogin ? "Sign in" : "Sign up"}
+                        {!isLoading && isLogin ? "Sign in" : "Sign up"}
+                        {isLoading && (
+                          <div className="flex justify-center items-center">
+                            <img src={Loading} alt="Loading" />
+                          </div>
+                        )}
                       </button>
                     </div>
                   </div>

@@ -1,12 +1,8 @@
-import React, { useState } from "react";
-import ReactStars from "react-rating-stars-component";
-import { orderApi } from "../../api/orderApi";
+import React from "react";
 import OrderDetailsCard from "./OrderDetailsCard";
 import ReactModal from "react-modal";
 
 export default function OrderDetailsModal({ orderDetails, selectedOrderStatus, fetchOrderDetails, isModalOpen, setIsModalOpen }) {
-  console.log(orderDetails);
-  console.log(isModalOpen);
   return (
     <ReactModal
       isOpen={isModalOpen}

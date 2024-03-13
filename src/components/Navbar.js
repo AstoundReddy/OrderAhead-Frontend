@@ -5,7 +5,7 @@ import { AuthContext } from "../context/AuthContext";
 import debounce from "lodash.debounce";
 import { restaurantApi } from "../api/restaurantApi";
 import Rating from "./Rating";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 const Navbar = ({ toggleSidebar }) => {
   const searchInputRef = useRef(null);
   const [searchResults, setSearchResults] = useState([]);
@@ -32,6 +32,22 @@ const Navbar = ({ toggleSidebar }) => {
       searchInputRef.current.value = "";
     }
   };
+  const dropdownRef = useRef(null);
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setShowDropdown(false); // Close the dropdown
+      }
+    }
+
+    // Add the event listener when the component mounts
+    document.addEventListener("mousedown", handleClickOutside);
+
+    // Clean up the event listener when the component unmounts
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
   return (
     <>
       <div className="bg-gray-800 text-white fixed z-10 font-sans font-semibold w-full p-1">
@@ -107,7 +123,7 @@ const Navbar = ({ toggleSidebar }) => {
               </div>
 
               {showDropdown && (
-                <div className="origin-top-right absolute right-0 mt-2 w-28 rounded-md shadow-lg bg-gray-800 ring-1 ring-black ring-opacity-5">
+                <div ref={dropdownRef} className="origin-top-right absolute right-0 mt-2 w-28 rounded-md shadow-lg bg-gray-800 ring-1 ring-black ring-opacity-5">
                   <div onClick={() => setShowDropdown(false)} className="py-1" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
                     <div className="md:hidden">
                       <Link to="/" className="block px-4 py-2 text-sm bg-gray-800 text-gray-100 hover:bg-gray-700 hover:text-white">

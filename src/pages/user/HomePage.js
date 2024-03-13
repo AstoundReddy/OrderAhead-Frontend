@@ -2,11 +2,12 @@ import React, { useContext, useEffect, useState } from "react";
 import RestaurantCard from "../../components/HomePage/RestaurantCard";
 import { restaurantApi } from "../../api/restaurantApi";
 import { AuthContext } from "../../context/AuthContext";
+import Loading from "../../assets/loading2svg.svg";
+import { toast } from "react-toastify";
 
 const HomePage = () => {
   const [restaurants, setRestaurants] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
   const { user } = useContext(AuthContext);
   const fetchRestaurants = async () => {
     setIsLoading(true);
@@ -15,7 +16,7 @@ const HomePage = () => {
       setRestaurants(restaurants);
       console.log(restaurants[0]);
     } catch (error) {
-      setError(error);
+      toast.error(error.response.data);
     } finally {
       setIsLoading(false);
     }
@@ -58,6 +59,11 @@ const HomePage = () => {
         <h2 className="text-2xl tracking-tight font-extrabold text-gray-900 sm:text-3xl md:text-4xl">
           {user?.userId ? <span className="block">Hello {user.firstName}, looking for a Restaurant? </span> : <span className="block">Our restaurants </span>}
         </h2>
+        {isLoading && (
+          <div className="flex justify-center items-center">
+            <img src={Loading} alt="Loading" />
+          </div>
+        )}
         <div className="flex flex-wrap justify-around">
           {restaurants.map((restaurant, index) => (
             <RestaurantCard key={index} restaurant={restaurant} />

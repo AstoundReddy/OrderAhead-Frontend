@@ -3,7 +3,8 @@ import { useContext, useEffect, useState } from "react";
 import { restaurantApi } from "../../api/restaurantApi";
 import { menuApi } from "../../api/menuApi";
 import { AuthContext } from "../../context/AuthContext";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
+import Loading from "../../assets/loading2svg.svg";
 
 Modal.setAppElement("#root"); // replace '#root' with the id of your app's root element
 
@@ -14,7 +15,6 @@ function AddItemModal({ isOpen, onClose, item, fetchItems }) {
   const [image, setImage] = useState("https://source.unsplash.com/featured/?food");
   const [availability, setAvailability] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
 
   const { user } = useContext(AuthContext);
   useEffect(() => {
@@ -39,12 +39,12 @@ function AddItemModal({ isOpen, onClose, item, fetchItems }) {
     setPrice("");
     setImage("https://source.unsplash.com/featured/?food");
     setAvailability(true);
-    setError(null);
     onClose();
   };
   const addItem = async () => {
+    setIsLoading(true);
     try {
-      const response = await restaurantApi.addItemByRestaurantId(user.restaurantId, { name, description, price, image, availability });
+      await restaurantApi.addItemByRestaurantId(user.restaurantId, { name, description, price, image, availability });
       toast.success("Item added successfully");
       fetchItems();
       handleClose();
@@ -56,7 +56,7 @@ function AddItemModal({ isOpen, onClose, item, fetchItems }) {
   };
   const editItem = async () => {
     try {
-      const response = await menuApi.editItemById(item.itemId, { name, description, price, image, availability });
+      await menuApi.editItemById(item.itemId, { name, description, price, image, availability });
       toast.success("Item updated successfully");
       fetchItems();
       handleClose();
@@ -82,7 +82,11 @@ function AddItemModal({ isOpen, onClose, item, fetchItems }) {
         className="inline-block w-full max-w-md p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-2xl"
         overlayClassName="fixed inset-0 z-10 overflow-y-auto flex items-center justify-center bg-black bg-opacity-50">
         <h3 className="text-lg font-medium leading-6 text-gray-900">Add Item</h3>
-
+        {isLoading && (
+          <div className="flex justify-center items-center">
+            <img src={Loading} alt="Loading" />
+          </div>
+        )}
         <form onSubmit={(e) => handleSubmit(e)} className="mt-2">
           <label className="block mt-4">
             <span className="text-gray-700">Name</span>

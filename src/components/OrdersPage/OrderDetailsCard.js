@@ -2,12 +2,13 @@ import React, { useState } from "react";
 import ReactStars from "react-rating-stars-component";
 import { orderApi } from "../../api/orderApi";
 import Rating from "../Rating";
+import Loading from "../../assets/loading2svg.svg";
+import { toast } from "react-toastify";
 
 const OrderDetailsCard = ({ item, selectedOrderStatus, fetchOrderDetails }) => {
   // Your component logic here
   const [rating, setRating] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
   const rateItem = async () => {
     setIsLoading(true);
     try {
@@ -15,15 +16,18 @@ const OrderDetailsCard = ({ item, selectedOrderStatus, fetchOrderDetails }) => {
       console.log(response);
       fetchOrderDetails();
     } catch (error) {
-      setError(error);
+      toast.error(error.response.data);
     } finally {
       setIsLoading(false);
     }
   };
   return (
     <div key={item.orderDetailsId} className="mb-4 w-60 bg-white rounded-md p-4 shadow-sm">
-      {" "}
-      {/* Added card-like style */}
+      {isLoading && (
+        <div className="flex justify-center items-center">
+          <img src={Loading} alt="Loading" />
+        </div>
+      )}
       <div className="flex items-center">
         <img src={item.menuItem.image} alt={item.menuItem.name} className="w-16 h-16 rounded-md mr-4" />
         <div>

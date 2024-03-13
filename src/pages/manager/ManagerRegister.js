@@ -1,10 +1,10 @@
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 import LogoWithText from "../../assets/images/LogoWithText.png";
 import { restaurantApi } from "../../api/restaurantApi";
 import { AuthContext } from "../../context/AuthContext";
 import { Link, useNavigate } from "react-router-dom";
 import { useFieldArray, useForm } from "react-hook-form";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 
 function ManagerRegister() {
   const {

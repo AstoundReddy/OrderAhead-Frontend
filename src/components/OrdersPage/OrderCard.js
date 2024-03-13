@@ -1,8 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import ReactStars from "react-rating-stars-component";
 import { orderApi } from "../../api/orderApi";
 import Rating from "../Rating";
 import moment from "moment";
+import { toast } from "react-toastify";
+import Loading from "../../assets/loading2svg.svg";
 
 function OrderCard({ order, setSelectedOrderId, fetchOrders, setIsModalOpen }) {
   const options = {
@@ -22,14 +24,14 @@ function OrderCard({ order, setSelectedOrderId, fetchOrders, setIsModalOpen }) {
   };
   const [rating, setRating] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
   const rateItem = async () => {
+    setIsLoading(true);
     try {
       const response = await orderApi.rateOrderById(order.orderId, rating);
       console.log(response);
       fetchOrders();
     } catch (error) {
-      setError(error);
+      toast.error(error.response.data);
     } finally {
       setIsLoading(false);
     }
@@ -59,6 +61,11 @@ function OrderCard({ order, setSelectedOrderId, fetchOrders, setIsModalOpen }) {
             <p>₹{order.totalPrice}</p>
           </div>
         </div>
+        {isLoading && (
+          <div className="flex justify-center items-center">
+            <img src={Loading} alt="Loading" />
+          </div>
+        )}
         {order.orderStatus === "DELIVERED" && (
           <div className="my-2 text-yellow-600">
             {order.rating === 0 || order.rating == null ? (

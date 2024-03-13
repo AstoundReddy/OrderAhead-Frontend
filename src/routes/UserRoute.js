@@ -1,6 +1,4 @@
 import { Outlet, Route, Routes } from "react-router-dom";
-import ManagerDashboard from "../pages/manager/ManagerDashboard";
-import ManagerMenu from "../pages/manager/ManagerMenu";
 import Navbar from "../components/Navbar";
 import Login from "../pages/user/Login";
 import OrdersPage from "../pages/user/OrdersPage";

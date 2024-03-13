@@ -2,7 +2,8 @@ import Modal from "react-modal";
 import Rating from "../Rating";
 import { useState } from "react";
 import { orderApi } from "../../api/orderApi";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
+import Loading from "../../assets/loading.gif";
 
 Modal.setAppElement("#root"); // replace '#root' with the id of your app's root element
 
@@ -10,12 +11,11 @@ function ManagerOrderModal({ isOpen, order, onClose, orderDetails }) {
   const [status, setStatus] = useState(order?.status);
   const [pickupDateTime, setPickupDateTime] = useState(order?.pickupTime);
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
 
   const handleAccept = async () => {
     setIsLoading(true);
     try {
-      const response = await orderApi.updateOrderById(order.orderId, { status, pickupDateTime });
+      await orderApi.updateOrderById(order.orderId, { status, pickupDateTime });
       onClose();
     } catch (error) {
       toast.error(error.respones.data);
@@ -25,12 +25,16 @@ function ManagerOrderModal({ isOpen, order, onClose, orderDetails }) {
   };
 
   const handleDecline = () => {
-    // decline the order
     onClose();
   };
   console.log(order);
   return (
     <>
+      {isLoading && (
+        <div className="flex justify-center items-center">
+          <img src={Loading} alt="Loading" />
+        </div>
+      )}
       <Modal
         isOpen={isOpen}
         onRequestClose={onClose}

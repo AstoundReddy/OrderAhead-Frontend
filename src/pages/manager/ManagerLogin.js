@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import LogoWithText from "../../assets/images/LogoWithText.png";
 import placeorder from "../../assets/images/placeorder.png";
@@ -8,7 +8,7 @@ import { restaurantApi } from "../../api/restaurantApi";
 import { AuthContext } from "../../context/AuthContext";
 import { Carousel } from "react-responsive-carousel";
 import { useForm } from "react-hook-form";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 const ManagerLogin = () => {
   const {
     register,
