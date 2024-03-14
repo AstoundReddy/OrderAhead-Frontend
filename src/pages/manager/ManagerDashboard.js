@@ -95,7 +95,7 @@ function ManagerDashboard() {
                 </TabPanel>
                 <TabPanel className="p-2 py-6 absolute inset-0">
                   <div className="overflow-x-auto min-w-screen">
-                    <OrderTable orders={orders} setSelectedOrderId={setSelectedOrderId} showPickupDatetime={true} />
+                    <OrderTable orders={orders} setSelectedOrderId={setSelectedOrderId} />
                   </div>
                 </TabPanel>
                 <TabPanel className="p-2 py-6 absolute inset-0">
@@ -105,7 +105,7 @@ function ManagerDashboard() {
                 </TabPanel>
                 <TabPanel className="p-2 py-6 absolute inset-0">
                   <div className="overflow-x-auto min-w-screen">
-                    <OrderTable orders={orders} setSelectedOrderId={setSelectedOrderId} showPickupDatetime={true} />
+                    <OrderTable orders={orders} setSelectedOrderId={setSelectedOrderId} showUserRating={true} />
                   </div>
                 </TabPanel>
               </div>
