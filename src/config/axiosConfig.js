@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE_URL = "http://order-ahead-backend-env.eba-tz3amrgz.us-east-1.elasticbeanstalk.com";
+const BASE_URL = "https://cors-anywhere.herokuapp.com/http://order-ahead-backend-env.eba-tz3amrgz.us-east-1.elasticbeanstalk.com";
 
 const apiInstance = axios.create({
   baseURL: BASE_URL,
