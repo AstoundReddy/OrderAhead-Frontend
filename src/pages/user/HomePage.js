@@ -61,7 +61,7 @@ const HomePage = () => {
         </h2>
         {isLoading && (
           <div className="flex justify-center items-center">
-            <img src={Loading} alt="Loading" />
+            <img src={Loading} className="w-12" alt="Loading" />
           </div>
         )}
         <div className="flex flex-wrap justify-around">

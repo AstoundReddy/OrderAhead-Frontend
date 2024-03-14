@@ -25,7 +25,7 @@ const OrderDetailsCard = ({ item, selectedOrderStatus, fetchOrderDetails }) => {
     <div key={item.orderDetailsId} className="mb-4 w-60 bg-white rounded-md p-4 shadow-sm">
       {isLoading && (
         <div className="flex justify-center items-center">
-          <img src={Loading} alt="Loading" />
+          <img src={Loading} className="w-12" alt="Loading" />
         </div>
       )}
       <div className="flex items-center">

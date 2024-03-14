@@ -32,12 +32,15 @@ function ManagerDashboard() {
       setIsLoading(false);
     }
   };
-  console.log(user);
   const fetchOrders = useCallback(
     async (status) => {
       setIsLoading(true);
+      if (!user?.restaurantId) {
+        setIsLoading(false);
+        return;
+      }
       try {
-        const response = await orderApi.getOrdersByRestaurant(user.restaurantId, status);
+        const response = await orderApi.getOrdersByRestaurant(user?.restaurantId, status, 0);
         setOrders(response.data.content);
       } catch (error) {
         toast.error(error.response.data);
@@ -45,7 +48,7 @@ function ManagerDashboard() {
         setIsLoading(false);
       }
     },
-    [user.restaurantId]
+    [user?.restaurantId]
   );
 
   useEffect(() => {
@@ -70,32 +73,40 @@ function ManagerDashboard() {
     <div className="bg-gray-100 min-h-screen">
       {selectedOrderId && <ManagerOrderModal isOpen={isOpen} orderDetails={selectedOrderDetails} order={selectedOrder} onClose={handleClose} />}
       <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+        {isLoading && (
+          <div className="flex justify-center items-center">
+            <img className="w-12" src={Loading} alt="Loading" />
+          </div>
+        )}
         <div className="px-4 py-6 sm:px-0">
           <div className="border-4 border-gray-800">
-            {isLoading && (
-              <div className="flex justify-center items-center">
-                <img src={Loading} alt="Loading" />
-              </div>
-            )}
             <Tabs selectedIndex={index} onSelect={(index) => setIndex(index)}>
-              <TabList className="flex list-none  bg-gray-800">
-                <Tab className="text-gray-500 cursor-pointer rounded-none text-center hover:bg-gray-100 font-medium flex-grow text-lg border-r-2 border-gray-500  py-2 px-4">Placed Orders</Tab>
-                <Tab className="text-gray-500 cursor-pointer rounded-none text-center hover:bg-gray-100 font-medium flex-grow text-lg border-r-2 border-gray-500  py-2 px-4">Preparing</Tab>
-                <Tab className="text-gray-500 cursor-pointer rounded-none text-center hover:bg-gray-100 font-medium flex-grow text-lg border-r-2 border-gray-500  py-2 px-4">Ready for Pickup</Tab>
-                <Tab className="text-gray-500 cursor-pointer rounded-none text-center hover:bg-gray-100 font-medium flex-grow text-lg    py-2 px-4">Delivered Orders</Tab>
+              <TabList className="flex flex-col sm:flex-row bg-gray-800">
+                <Tab className="text-gray-500 cursor-pointer rounded-none text-center hover:bg-gray-100 font-medium w-full text-lg border-r-2 border-gray-500 py-2 px-4">Placed Orders</Tab>
+                <Tab className="text-gray-500 cursor-pointer rounded-none text-center hover:bg-gray-100 font-medium w-full text-lg border-r-2 border-gray-500 py-2 px-4">Preparing</Tab>
+                <Tab className="text-gray-500 cursor-pointer rounded-none text-center hover:bg-gray-100 font-medium w-full text-lg border-r-2 border-gray-500 py-2 px-4">Ready for Pickup</Tab>
+                <Tab className="text-gray-500 cursor-pointer rounded-none text-center hover:bg-gray-100 font-medium w-full text-lg py-2 px-4">Delivered Orders</Tab>
               </TabList>
               <div className="relative h-full">
-                <TabPanel className="p-6 absolute inset-0">
-                  <OrderTable orders={orders} setSelectedOrderId={setSelectedOrderId} />
+                <TabPanel className="p-2 py-6 absolute inset-0">
+                  <div className="overflow-x-auto min-w-screen">
+                    <OrderTable orders={orders} setSelectedOrderId={setSelectedOrderId} />
+                  </div>
                 </TabPanel>
-                <TabPanel className="p-6 absolute inset-0">
-                  <OrderTable orders={orders} setSelectedOrderId={setSelectedOrderId} showPickupDatetime={true} />
+                <TabPanel className="p-2 py-6 absolute inset-0">
+                  <div className="overflow-x-auto min-w-screen">
+                    <OrderTable orders={orders} setSelectedOrderId={setSelectedOrderId} showPickupDatetime={true} />
+                  </div>
                 </TabPanel>
-                <TabPanel className="p-6 absolute inset-0">
-                  <OrderTable orders={orders} setSelectedOrderId={setSelectedOrderId} showPickupDatetime={true} />
+                <TabPanel className="p-2 py-6 absolute inset-0">
+                  <div className="overflow-x-auto min-w-screen">
+                    <OrderTable orders={orders} setSelectedOrderId={setSelectedOrderId} showPickupDatetime={true} />
+                  </div>
                 </TabPanel>
-                <TabPanel className="p-6 absolute inset-0">
-                  <OrderTable orders={orders} setSelectedOrderId={setSelectedOrderId} showUserRating={true} />
+                <TabPanel className="p-2 py-6 absolute inset-0">
+                  <div className="overflow-x-auto min-w-screen">
+                    <OrderTable orders={orders} setSelectedOrderId={setSelectedOrderId} showPickupDatetime={true} />
+                  </div>
                 </TabPanel>
               </div>
             </Tabs>

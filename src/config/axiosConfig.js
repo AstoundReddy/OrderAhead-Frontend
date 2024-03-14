@@ -1,6 +1,8 @@
 import axios from "axios";
 
-const BASE_URL = "https://orderaheadproxyserver.azurewebsites.net/";
+const local = "http://localhost:5000/";
+const proxy = "https://orderaheadproxyserver.azurewebsites.net/";
+const BASE_URL = proxy;
 
 const apiInstance = axios.create({
   baseURL: BASE_URL,

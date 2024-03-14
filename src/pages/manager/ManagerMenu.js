@@ -5,11 +5,15 @@ import AddItemModal from "../../components/Manager/AddItemModal";
 import Rating from "../../components/Rating";
 import HoursOfOperation from "../../components/HoursOfOp";
 import { AuthContext } from "../../context/AuthContext";
+import Loading from "../../assets/loading2svg.svg";
+import { toast } from "react-toastify";
 export default function ManagerMenu() {
   const [menuItems, setMenuItems] = useState([]);
   const [restaurantDetails, setRestaurantDetails] = useState({});
   const [modalItem, setModalItem] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
   const { user } = useContext(AuthContext);
   const handleAdd = () => {
     setIsModalOpen(true);
@@ -26,12 +30,17 @@ export default function ManagerMenu() {
   };
 
   const fetchItems = useCallback(async () => {
+    setIsLoading(true);
     try {
       const response = await restaurantApi.getRestaurantById(user.restaurantId);
       const { menuItems, ...restaurantDetails } = response.data;
       setRestaurantDetails(restaurantDetails);
       setMenuItems(menuItems);
-    } catch (error) {}
+    } catch (error) {
+      toast.error(error.response.data);
+    } finally {
+      setIsLoading(false);
+    }
   }, [user]);
   console.log(user);
   useEffect(() => {
@@ -40,6 +49,11 @@ export default function ManagerMenu() {
   return (
     <div className="bg-gray-100 min-h-screen ">
       <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+        {isLoading && (
+          <div className="flex justify-center items-center">
+            <img src={Loading} className="w-12" alt="Loading" />
+          </div>
+        )}
         <div className="px-4 py-6 sm:px-0">
           <div className="border-4 rounded-lg border-gray-800 overflow-x-auto p-2">
             <div className="p-4">
@@ -108,7 +122,7 @@ export default function ManagerMenu() {
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="mt-1 block w-full rounded-md bg-gray-100 border-transparent focus:border-yellow-500 focus:bg-white focus:ring-0" required>
+                        <div className="mt-1 text-wrap block w-full rounded-md bg-gray-100 border-transparent focus:border-yellow-500 focus:bg-white focus:ring-0" required>
                           {item.description}
                         </div>
                       </td>

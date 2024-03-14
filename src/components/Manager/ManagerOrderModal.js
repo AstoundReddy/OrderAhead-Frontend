@@ -32,7 +32,7 @@ function ManagerOrderModal({ isOpen, order, onClose, orderDetails }) {
     <>
       {isLoading && (
         <div className="flex justify-center items-center">
-          <img src={Loading} alt="Loading" />
+          <img src={Loading} className="w-12" alt="Loading" />
         </div>
       )}
       <Modal

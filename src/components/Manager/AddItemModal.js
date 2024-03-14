@@ -84,7 +84,7 @@ function AddItemModal({ isOpen, onClose, item, fetchItems }) {
         <h3 className="text-lg font-medium leading-6 text-gray-900">Add Item</h3>
         {isLoading && (
           <div className="flex justify-center items-center">
-            <img src={Loading} alt="Loading" />
+            <img src={Loading} className="w-12" alt="Loading" />
           </div>
         )}
         <form onSubmit={(e) => handleSubmit(e)} className="mt-2">

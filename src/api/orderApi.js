@@ -21,7 +21,7 @@ const orderApi = {
     return apiInstance({ ...RATE_ORDER, url: RATE_ORDER.url + orderId + "/rating?rating=" + rating });
   },
   getOrdersByRestaurant: async (restaurantId, status, page) => {
-    return apiInstance({ ...GET_ORDERS_BY_RESTAURANT, url: GET_ORDERS_BY_RESTAURANT.url + restaurantId + "?status=" + status + "&page=" + page });
+    return apiInstance({ ...GET_ORDERS_BY_RESTAURANT, url: GET_ORDERS_BY_RESTAURANT.url + restaurantId + "?status=" + status });
   },
   updateOrderById: async (orderId, requestBody) => {
     let url = UPDATE_ORDER.url + orderId;

@@ -192,7 +192,7 @@ const RestaurantPage = () => {
       <div className="flex flex-col items-center justify-center pb-20">
         {isLoading && (
           <div className="flex justify-center items-center">
-            <img src={Loading} alt="Loading" />
+            <img src={Loading} className="w-12" alt="Loading" />
           </div>
         )}
         {restaurantDetails?.menuItems?.map((item, index) => (
