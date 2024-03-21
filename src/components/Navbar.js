@@ -11,6 +11,17 @@ const Navbar = ({ toggleSidebar }) => {
   const [searchResults, setSearchResults] = useState([]);
   const [isManager, setIsManager] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const placeholders = ["restaurants", "biryani", "pizza", "burgers", "sushi", "pasta", "vegan options", "gluten-free", "desserts", "coffee" /* add more as needed */];
+  const [placeholderIndex, setPlaceholderIndex] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setPlaceholderIndex((placeholderIndex + 1) % placeholders.length);
+    }, 3000); // Change placeholder every 3 seconds
+
+    return () => clearInterval(interval);
+  }, [placeholderIndex]);
   const navigate = useNavigate();
   const { user, logout } = useContext(AuthContext);
   useEffect(() => {
@@ -18,11 +29,14 @@ const Navbar = ({ toggleSidebar }) => {
   }, [user]);
   const handleSearch = debounce(async (searchTerm) => {
     if (searchTerm.length < 3) return setSearchResults([]);
+    setIsLoading(true);
     try {
       const response = await restaurantApi.searchByString(searchTerm);
       setSearchResults(response.data);
     } catch (err) {
       toast.error("Error searching");
+    } finally {
+      setIsLoading(false);
     }
   }, 500);
   const handleSearchResultClick = () => {
@@ -39,11 +53,7 @@ const Navbar = ({ toggleSidebar }) => {
         setShowDropdown(false); // Close the dropdown
       }
     }
-
-    // Add the event listener when the component mounts
     document.addEventListener("mousedown", handleClickOutside);
-
-    // Clean up the event listener when the component unmounts
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
@@ -63,10 +73,10 @@ const Navbar = ({ toggleSidebar }) => {
                 onChange={(e) => {
                   handleSearch(e.target.value);
                 }}
-                className="border-2 border-gray-300 bg-white h-10 my-2 px-4 w-full rounded-full text-black text-sm focus:outline-none"
+                className={`border-2 border-gray-300 bg-white ${isLoading ? "animate-bounce" : ""} h-10 my-2 px-4 w-full rounded-full text-black text-sm focus:outline-none`}
                 type="search"
                 name="search"
-                placeholder="Search"
+                placeholder={"Search for " + placeholders[placeholderIndex]}
               />
               {(searchResults?.menuItems?.length > 0 || searchResults?.restaurants?.length > 0) && (
                 <div className="absolute mt-2 z-20 rounded-md w-full  bg-white text-black shadow-lg  border border-gray-200 divide-y divide-gray-100">
