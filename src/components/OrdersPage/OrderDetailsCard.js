@@ -13,7 +13,6 @@ const OrderDetailsCard = ({ item, selectedOrderStatus, fetchOrderDetails }) => {
     setIsLoading(true);
     try {
       const response = await orderApi.rateItemById(item.orderDetailsId, rating);
-      console.log(response);
       fetchOrderDetails();
     } catch (error) {
       toast.error(error.response.data);

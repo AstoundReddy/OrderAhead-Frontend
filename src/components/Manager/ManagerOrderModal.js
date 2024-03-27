@@ -27,7 +27,6 @@ function ManagerOrderModal({ isOpen, order, onClose, orderDetails }) {
   const handleDecline = () => {
     onClose();
   };
-  console.log(order);
   return (
     <>
       {isLoading && (

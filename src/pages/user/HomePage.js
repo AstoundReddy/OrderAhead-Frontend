@@ -15,7 +15,6 @@ const HomePage = () => {
     try {
       const restaurants = (await restaurantApi.getAllRestaurants()).data.content;
       setRestaurants(restaurants);
-      console.log(restaurants[0]);
     } catch (error) {
       toast.error(error.response.data);
     } finally {

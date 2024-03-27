@@ -84,7 +84,6 @@ const RestaurantPage = () => {
         specialInstructions,
       });
       navigate("/");
-      console.log(response);
     } catch (error) {
       toast.error(error.response.data);
     } finally {

@@ -13,7 +13,6 @@ const OrdersPage = () => {
   const fetchOrders = useCallback(async () => {
     if (!user) return;
     const fetchedOrders = (await orderApi.fetchOrdersByUser(user?.userId)).data;
-    console.log(fetchedOrders);
     setOrders(fetchedOrders);
   }, [user]);
   const fetchOrderDetails = async (orderId) => {
@@ -24,7 +23,6 @@ const OrdersPage = () => {
     fetchOrders();
   }, [fetchOrders]);
   useEffect(() => {
-    console.log(selectedOrderId);
     if (selectedOrderId) fetchOrderDetails(selectedOrderId);
     if (selectedOrderId) {
       const selectedOrder = orders.find((order) => order.orderId === selectedOrderId);

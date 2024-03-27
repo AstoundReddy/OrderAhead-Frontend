@@ -24,7 +24,6 @@ const ManagerLogin = () => {
       });
       login(response.data);
       navigate("/manager/dashboard");
-      console.log(response);
     } catch (error) {
       toast.error(error.response.data);
     }

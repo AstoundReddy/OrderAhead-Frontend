@@ -42,7 +42,6 @@ export default function ManagerMenu() {
       setIsLoading(false);
     }
   }, [user]);
-  console.log(user);
   useEffect(() => {
     fetchItems();
   }, [fetchItems]);

@@ -28,7 +28,6 @@ function OrderCard({ order, setSelectedOrderId, fetchOrders, setIsModalOpen }) {
     setIsLoading(true);
     try {
       const response = await orderApi.rateOrderById(order.orderId, rating);
-      console.log(response);
       fetchOrders();
     } catch (error) {
       toast.error(error.response.data);
