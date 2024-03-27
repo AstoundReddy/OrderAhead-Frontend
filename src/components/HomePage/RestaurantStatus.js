@@ -1,57 +1,30 @@
 import React, { useEffect, useState } from "react";
+import { getRestaurantStatus } from "../../helper/getRestaurantStatus";
 
 const RestaurantStatus = ({ hoursOfOperation }) => {
   const [status, setStatus] = useState("");
   let statusColor;
   switch (status) {
     case "Open":
-      statusColor = "text-green-500";
+      statusColor = "text-green-700";
       break;
     case "Closes soon":
-      statusColor = "text-yellow-500";
+      statusColor = "text-yellow-700";
       break;
     case "Opens soon":
-      statusColor = "text-yellow-500";
+      statusColor = "text-yellow-700";
       break;
     case "Closed":
-      statusColor = "text-red-500";
+      statusColor = "text-red-700";
       break;
     default:
-      statusColor = "text-gray-500";
+      statusColor = "text-gray-700";
   }
   useEffect(() => {
-    const periods = hoursOfOperation.split(",").map((period) =>
-      period.split("-").map((time) => {
-        const [hours, minutes] = time.split(":");
-        return hours * 60 + +minutes;
-      })
-    );
-
-    const now = new Date();
-    const nowInMinutes = now.getHours() * 60 + now.getMinutes();
-
-    for (const [start, end] of periods) {
-      if (nowInMinutes < start) {
-        if (start - nowInMinutes <= 30) {
-          setStatus("Opens soon");
-        } else {
-          setStatus("Closed");
-        }
-        return;
-      } else if (nowInMinutes <= end) {
-        if (end - nowInMinutes <= 30) {
-          setStatus("Closes soon");
-        } else {
-          setStatus("Open");
-        }
-        return;
-      }
-    }
-
-    setStatus("Closed");
+    setStatus(getRestaurantStatus(hoursOfOperation));
   }, [hoursOfOperation]);
 
-  return <p className={`text-lg font-semibold ${statusColor}`}>{status}</p>;
+  return <p className={`text-xl font-bold ${statusColor}`}>{status}</p>;
 };
 
 export default RestaurantStatus;

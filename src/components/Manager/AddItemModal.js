@@ -5,20 +5,23 @@ import { menuApi } from "../../api/menuApi";
 import { AuthContext } from "../../context/AuthContext";
 import { toast } from "react-toastify";
 import Loading from "../../assets/loading2svg.svg";
+import { GoogleGenerativeAI } from "@google/generative-ai";
 
 Modal.setAppElement("#root"); // replace '#root' with the id of your app's root element
 
-function AddItemModal({ isOpen, onClose, item, fetchItems }) {
+function AddItemModal({ isOpen, onClose, item, fetchItems, cuisine }) {
+  const genAI = new GoogleGenerativeAI("AIzaSyBdEe_va13BzyZ9OPfiG3WY5HukhhMlvxA");
+
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
   const [image, setImage] = useState("https://source.unsplash.com/featured/?food");
+
   const [availability, setAvailability] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
 
   const { user } = useContext(AuthContext);
   useEffect(() => {
-    console.log("item", item);
     if (item) {
       setName(item.name);
       setDescription(item.description);
@@ -73,6 +76,47 @@ function AddItemModal({ isOpen, onClose, item, fetchItems }) {
     else addItem();
   };
 
+  const generate = async (field) => {
+    const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+    let prompt;
+    switch (field) {
+      case "name":
+        prompt =
+          "Generate one name of my menu item to fill the name field of the item in restaurant whose cuisine is " +
+          cuisine +
+          ". Name of just a single item in plain text without bold to fill the field";
+        break;
+      case "description":
+        prompt = "Generate a one line description to display in my menu for" + name;
+        break;
+      case "price":
+        prompt =
+          "Generate indian price for my menu item , restaurant cuisine is " +
+          cuisine +
+          " and item name is " +
+          name +
+          " and description is " +
+          description +
+          ". It should just be a whole number without any currency sign";
+        break;
+      default:
+        prompt = "Generate a one line description to display in my menu for" + name;
+    }
+    setIsLoading(true);
+    try {
+      const result = await model.generateContent(prompt);
+      const response = await result.response;
+      const text = response.text();
+      if (field === "name") setName(text);
+      if (field === "description") setDescription(text);
+      if (field === "price") setPrice(text);
+    } catch (error) {
+      console.log(error);
+      toast.error(error?.response?.data);
+    } finally {
+      setIsLoading(false);
+    }
+  };
   return (
     <>
       <Modal
@@ -88,8 +132,18 @@ function AddItemModal({ isOpen, onClose, item, fetchItems }) {
           </div>
         )}
         <form onSubmit={(e) => handleSubmit(e)} className="mt-2">
-          <label className="block mt-4">
-            <span className="text-gray-700">Name</span>
+          <label className=" self-center block mt-4">
+            <div className=" flex space-x-2">
+              <span className="font-semibold text-gray-700 self-center">Name</span>
+              <div className="flex">
+                <button
+                  type="button"
+                  onClick={() => generate("name")}
+                  className="bg-gradient-to-r w-20 hover:bg-black text-sm from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 text-white  px-2 py-1 rounded-md">
+                  Generate
+                </button>
+              </div>
+            </div>
             <input
               type="text"
               value={name}
@@ -99,8 +153,19 @@ function AddItemModal({ isOpen, onClose, item, fetchItems }) {
             />
           </label>
 
-          <label className="block mt-4">
-            <span className="text-gray-700">Description</span>
+          <label className=" self-center block mt-4">
+            <div className=" flex space-x-2">
+              <span className="font-semibold text-gray-700 self-center">Description</span>
+              <div className="flex">
+                <button
+                  type="button"
+                  onClick={() => generate("description")}
+                  className="bg-gradient-to-r text-sm from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 text-white  px-2 py-1 rounded-md shadow-md transition duration-200 ease-in-out">
+                  Generate
+                </button>
+              </div>
+            </div>
+
             <textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
@@ -109,8 +174,18 @@ function AddItemModal({ isOpen, onClose, item, fetchItems }) {
             />
           </label>
 
-          <label className="block mt-4">
-            <span className="text-gray-700">Price</span>
+          <label className=" self-center block mt-4">
+            <div className=" flex space-x-2">
+              <span className="font-semibold text-gray-700 self-center">Price</span>
+              <div className="flex">
+                <button
+                  type="button"
+                  onClick={() => generate("price")}
+                  className="bg-gradient-to-r text-sm from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 text-white  px-2 py-1 rounded-md shadow-md transition duration-200 ease-in-out">
+                  Generate
+                </button>
+              </div>
+            </div>
             <input
               type="number"
               step="0.01"
@@ -121,8 +196,8 @@ function AddItemModal({ isOpen, onClose, item, fetchItems }) {
             />
           </label>
 
-          <label className="block mt-4">
-            <span className="text-gray-700">Image URL</span>
+          <label className=" self-center block mt-4">
+            <span className="font-semibold text-gray-700">Image URL</span>
             <input
               type="url"
               value={image}
@@ -132,8 +207,8 @@ function AddItemModal({ isOpen, onClose, item, fetchItems }) {
             />
           </label>
 
-          <label className="block  mt-4">
-            <span className="w-10 text-gray-700">Availability</span>
+          <label className=" self-center block  mt-4">
+            <span className="font-semibold w-10 text-gray-700">Availability</span>
             <input
               type="checkbox"
               checked={availability}

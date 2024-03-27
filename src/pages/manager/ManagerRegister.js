@@ -5,6 +5,8 @@ import { AuthContext } from "../../context/AuthContext";
 import { Link, useNavigate } from "react-router-dom";
 import { useFieldArray, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
+import { useState } from "react";
+import Loading from "../../assets/loading2svg.svg";
 
 function ManagerRegister() {
   const {
@@ -15,6 +17,8 @@ function ManagerRegister() {
     formState: { errors },
   } = useForm();
   const password = watch("user.password");
+  const [isLoading, setIsLoading] = useState(false);
+
   const { fields, append, remove } = useFieldArray({
     control,
     name: "restaurant.hoursOfOperation",
@@ -28,6 +32,7 @@ function ManagerRegister() {
       .join(", "); // Join all entries with ', '
   }
   const registerManagerAndRestaurant = async (data) => {
+    setIsLoading(true);
     try {
       const response = await restaurantApi.registerManager({
         ...data,
@@ -37,6 +42,8 @@ function ManagerRegister() {
       navigate("/manager/menu");
     } catch (error) {
       toast.error(error.response.data);
+    } finally {
+      setIsLoading(false);
     }
   };
   const onSubmit = (data) => {
@@ -55,6 +62,11 @@ function ManagerRegister() {
             <div className="flex flex-col md:flex-row items-center justify-between space-x-5">
               <div className="block pl-2  self-start text-gray-700">
                 <h2 className="leading-relaxed font-semibold text-xl self-center">Manager Registration</h2>
+                {isLoading && (
+                  <div className="flex justify-center items-center">
+                    <img src={Loading} className="w-12" alt="Loading" />
+                  </div>
+                )}
                 <p className="leading-relaxed text-sm self-center">
                   Already have an account?
                   <Link to="/manager/login" className="text-indigo-500 mx-1">

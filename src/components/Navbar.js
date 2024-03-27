@@ -12,14 +12,13 @@ const Navbar = ({ toggleSidebar }) => {
   const [isManager, setIsManager] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const placeholders = ["restaurants", "biryani", "pizza", "burgers", "sushi", "pasta", "vegan options", "gluten-free", "desserts", "coffee" /* add more as needed */];
+  const placeholders = ["restaurants", "biryani", "pizza", "burgers", "sushi", "pasta", "coffee"];
   const [placeholderIndex, setPlaceholderIndex] = useState(0);
-
+  const [showSearchResults, setShowSearchResults] = useState(false);
   useEffect(() => {
     const interval = setInterval(() => {
       setPlaceholderIndex((placeholderIndex + 1) % placeholders.length);
-    }, 3000); // Change placeholder every 3 seconds
-
+    }, 3000);
     return () => clearInterval(interval);
   }, [placeholderIndex]);
   const navigate = useNavigate();
@@ -33,6 +32,7 @@ const Navbar = ({ toggleSidebar }) => {
     try {
       const response = await restaurantApi.searchByString(searchTerm);
       setSearchResults(response.data);
+      setShowSearchResults(true);
     } catch (err) {
       toast.error("Error searching");
     } finally {
@@ -51,6 +51,9 @@ const Navbar = ({ toggleSidebar }) => {
     function handleClickOutside(event) {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setShowDropdown(false); // Close the dropdown
+      }
+      if (searchInputRef.current && !searchInputRef.current.contains(event.target)) {
+        setShowSearchResults(false);
       }
     }
     document.addEventListener("mousedown", handleClickOutside);
@@ -78,7 +81,7 @@ const Navbar = ({ toggleSidebar }) => {
                 name="search"
                 placeholder={"Search for " + placeholders[placeholderIndex]}
               />
-              {(searchResults?.menuItems?.length > 0 || searchResults?.restaurants?.length > 0) && (
+              {showSearchResults && (searchResults?.menuItems?.length > 0 || searchResults?.restaurants?.length > 0) && (
                 <div className="absolute mt-2 z-20 rounded-md w-full  bg-white text-black shadow-lg  border border-gray-200 divide-y divide-gray-100">
                   {searchResults?.menuItems?.map((item, index) => (
                     <Link key={index} onClick={handleSearchResultClick} to={`/restaurant/${item.restaurantId}`} className="px-4 py-2 flex  w-full justify-between hover:bg-gray-200">

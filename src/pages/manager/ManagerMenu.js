@@ -189,6 +189,7 @@ export default function ManagerMenu() {
               fetchItems={fetchItems}
               isOpen={isModalOpen}
               item={modalItem}
+              cuisine={restaurantDetails?.cuisineType}
               onClose={() => {
                 setModalItem(null);
                 setIsModalOpen(false);

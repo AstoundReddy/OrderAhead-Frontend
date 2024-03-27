@@ -4,6 +4,7 @@ import { restaurantApi } from "../../api/restaurantApi";
 import { AuthContext } from "../../context/AuthContext";
 import Loading from "../../assets/loading2svg.svg";
 import { toast } from "react-toastify";
+import { getRestaurantStatus } from "../../helper/getRestaurantStatus";
 
 const HomePage = () => {
   const [restaurants, setRestaurants] = useState([]);
@@ -65,9 +66,21 @@ const HomePage = () => {
           </div>
         )}
         <div className="flex flex-wrap justify-around">
-          {restaurants.map((restaurant, index) => (
-            <RestaurantCard key={index} restaurant={restaurant} />
-          ))}
+          {restaurants
+            .sort((a, b) => {
+              if (
+                (getRestaurantStatus(a.hoursOfOperation) === "Open" || getRestaurantStatus(a.hoursOfOperation) === "Closes soon") &&
+                getRestaurantStatus(b.hoursOfOperation) !== "Open" &&
+                getRestaurantStatus(b.hoursOfOperation) !== "Closes soon"
+              ) {
+                return -1;
+              } else {
+                return 1;
+              }
+            })
+            .map((restaurant, index) => (
+              <RestaurantCard key={index} restaurant={restaurant} />
+            ))}
         </div>
       </div>
     </div>

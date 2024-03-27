@@ -61,10 +61,13 @@ function AboutUs() {
           <p className="text-gray-700">SpringBoot3, MySQL, React, Tailwind CSS.</p>
         </div>
 
-        <div className="mb-6 bg-gray-100 p-4 rounded-md">
-          <h2 className="text-2xl font-bold mb-2">Contact Us</h2>
-          <p className="text-gray-700">If you have any questions or would like to get in touch, please contact us at [Your Email].</p>
-        </div>
+        {/* <div className="mb-6 bg-gray-100 p-4 rounded-md">
+          <h2 className="text-2xl font-bold mb-2">Challenges faced</h2>
+          <p className="text-gray-700">
+            Apart from the use of different annotations to manipulate data and wire objects during the initial stints of spring development, I faced a huge challenge while deployment (Atleast felt like it).
+            I deployed the backend on AWS (which was a different story altogether but was not as much challenging), and by default it is open to communicate only over HTTP. To configure it to HTTPS, apparently one needs an SSL certificate which is not free - one needs to own a domain. This is where I realized when to go to chatbots and when to go to stackoverflow.
+          </p>
+        </div> */}
       </div>
     </div>
   );

@@ -235,15 +235,15 @@ const Login = () => {
                     )}
 
                     <div>
+                      {isLoading && (
+                        <div className="flex justify-center items-center">
+                          <img src={Loading} className="w-12" alt="Loading" />
+                        </div>
+                      )}
                       <button
                         onClick={handleSubmit(onSubmit)}
                         className="w-full flex mt-2 justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                        {!isLoading && isLogin ? "Sign in" : "Sign up"}
-                        {isLoading && (
-                          <div className="flex justify-center items-center">
-                            <img src={Loading} className="w-12" alt="Loading" />
-                          </div>
-                        )}
+                        {isLogin ? "Sign in" : "Sign up"}
                       </button>
                     </div>
                   </div>

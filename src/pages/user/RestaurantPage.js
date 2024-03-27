@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import ReactModal from "react-modal";
 import { restaurantApi } from "../../api/restaurantApi";
@@ -8,6 +8,8 @@ import { AuthContext } from "../../context/AuthContext";
 import MenuItemCard from "../../components/RestaurantPage/MenuItemCard";
 import { toast } from "react-toastify";
 import Loading from "../../assets/loading2svg.svg";
+import RestaurantStatus from "../../components/HomePage/RestaurantStatus";
+import { getRestaurantStatus } from "../../helper/getRestaurantStatus";
 
 ReactModal.setAppElement("#root");
 const RestaurantPage = () => {
@@ -19,7 +21,7 @@ const RestaurantPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [specialInstructions, setSpecialInstructions] = useState("");
   const [isButtonHighlighted, setIsButtonHighlighted] = useState(false);
-
+  const [restaurantStatus, setRestaurantStatus] = useState("");
   const handlePlusMinusClick = () => {
     setIsButtonHighlighted(true);
     setTimeout(() => setIsButtonHighlighted(false), 500); // Remove highlight after 2 seconds
@@ -27,24 +29,25 @@ const RestaurantPage = () => {
 
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();
-  const handleIncrement = (itemId) => {
+  const handleIncrement = useCallback((itemId) => {
     setCart((prevCart) => ({
       ...prevCart,
       [itemId]: (prevCart[itemId] || 0) + 1,
     }));
-  };
+  }, []);
 
-  const handleDecrement = (itemId) => {
+  const handleDecrement = useCallback((itemId) => {
     setCart((prevCart) => ({
       ...prevCart,
       [itemId]: Math.max((prevCart[itemId] || 0) - 1, 0),
     }));
-  };
+  }, []);
   const fetchRestaurantById = async (id) => {
     setIsLoading(true);
     try {
       const restaurant = (await restaurantApi.getRestaurantById(id)).data;
       setRestaurantDetails(restaurant);
+      setRestaurantStatus(getRestaurantStatus(restaurant.hoursOfOperation));
     } catch (error) {
       toast.error(error.response.data);
     } finally {
@@ -88,6 +91,7 @@ const RestaurantPage = () => {
       setIsLoading(false);
     }
   };
+
   return (
     <div className="font-sans  text-gray-900 antialiased">
       <ReactModal
@@ -151,6 +155,7 @@ const RestaurantPage = () => {
           <h1 className="text-4xl tracking-tight font-extrabold text-black sm:text-5xl md:text-6xl">{restaurantDetails.name}</h1>
           <div className=" max-w-md mx-auto text-base text-gray-900 font-semibold  sm:text-lg md:mt-5 md:text-xl md:max-w-3xl">
             <HoursOfOperation timeStamp={restaurantDetails?.hoursOfOperation} />
+            {restaurantDetails?.hoursOfOperation && <RestaurantStatus hoursOfOperation={restaurantDetails?.hoursOfOperation} />}
             {restaurantDetails.location} | {restaurantDetails.cuisineType} | {restaurantDetails.phoneNumber}
           </div>
           <span className="text-lg font-semibold">
@@ -189,7 +194,7 @@ const RestaurantPage = () => {
           </div>
         )}
       </div>
-      <div className="flex flex-col items-center justify-center pb-20">
+      <div className={`flex flex-col items-center ${(restaurantStatus == "Closed" || restaurantStatus == "Opens soon") && "opacity-50 pointer-events-none "}  justify-center pb-20`}>
         {isLoading && (
           <div className="flex justify-center items-center">
             <img src={Loading} className="w-12" alt="Loading" />

@@ -1,10 +1,11 @@
 import React, { useContext } from "react";
 import { AuthContext } from "../../context/AuthContext";
 
-function MenuItemCard({ item, key, cart, handleIncrement, handleDecrement, handlePlusMinusClick }) {
+function MenuItemCard({ item, cart, handleIncrement, handleDecrement, handlePlusMinusClick }) {
   const { user } = useContext(AuthContext);
+  const imageUrl = `https://source.unsplash.com/160x160/?food,${item.name}`;
   return (
-    <div key={key} className={`flex items-start justify-between w-full max-w-2xl p-4 mb-4 bg-white rounded shadow`}>
+    <div className={`flex items-start justify-between w-full max-w-2xl p-4 mb-4 bg-white rounded shadow`}>
       <div className="w-1/2">
         <div className="flex">
           <h2 className="text-xl font-bold self-center ">{item.name}</h2>
@@ -20,7 +21,7 @@ function MenuItemCard({ item, key, cart, handleIncrement, handleDecrement, handl
       </div>
       <div className={`w-2/5 md:w-1/4 ${!item.availability && "opacity-50"}`}>
         <div className="flex w-auto items-center justify-center">
-          <img className="object-contain max-h-32   rounded" src={item.image} alt={item.name} />
+          <img className="object-contain max-h-32   rounded" src={imageUrl} alt={item.name} />
         </div>
         <div className="flex  items-center justify-between m-1  text-green-700 text-lg font-bold font-sans px-4 py-2 rounded-md border-2 border-green-700">
           <button onClick={() => (item.availability && user?.userId ? handleDecrement(item.itemId) : handlePlusMinusClick())} className="font-bold">
