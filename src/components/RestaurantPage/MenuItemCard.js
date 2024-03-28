@@ -1,5 +1,6 @@
 import React, { useContext } from "react";
 import { AuthContext } from "../../context/AuthContext";
+import Rating from "../Rating";
 
 function MenuItemCard({ item, cart, handleIncrement, handleDecrement, handlePlusMinusClick }) {
   const { user } = useContext(AuthContext);
@@ -14,8 +15,7 @@ function MenuItemCard({ item, cart, handleIncrement, handleDecrement, handlePlus
         <p className="mt-2 text-gray-600">{item.description}</p>
         <p className="mt-2 text-gray-600">Price: ₹{item.price}</p>
         <div className="mt-2 flex items-center">
-          <span className="text-yellow-500">★</span>
-          <span className="ml-1">{item.averageRating || 0}</span>
+          <Rating rating={item.averageRating || 0} />
           <span className="ml-2 text-gray-600">({item.numberOfRatings || 0} ratings)</span>
         </div>
       </div>

@@ -9,6 +9,7 @@ const OrderDetailsCard = ({ item, selectedOrderStatus, fetchOrderDetails }) => {
   // Your component logic here
   const [rating, setRating] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
+  const imageUrl = `https://source.unsplash.com/200x200/?restaurant,${item.orderDetailsId}`;
   const rateItem = async () => {
     setIsLoading(true);
     try {
@@ -21,14 +22,14 @@ const OrderDetailsCard = ({ item, selectedOrderStatus, fetchOrderDetails }) => {
     }
   };
   return (
-    <div key={item.orderDetailsId} className="mb-4 w-60 bg-white rounded-md p-4 shadow-sm">
+    <div key={item.orderDetailsId} className="mb-4 w-auto bg-white rounded-md p-4 shadow-sm">
       {isLoading && (
         <div className="flex justify-center items-center">
           <img src={Loading} className="w-12" alt="Loading" />
         </div>
       )}
       <div className="flex items-center">
-        <img src={item.menuItem.image} alt={item.menuItem.name} className="w-16 h-16 rounded-md mr-4" />
+        <img src={imageUrl} alt={item.menuItem.name} className="w-16 h-16 rounded-md mr-4" />
         <div>
           <p className="text-indigo-600 font-medium">{item.menuItem.name}</p>
           <p className="text-gray-600">₹{item.menuItem.price}</p>

@@ -12,7 +12,7 @@ const Navbar = ({ toggleSidebar }) => {
   const [isManager, setIsManager] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const placeholders = ["restaurants", "biryani", "pizza", "burgers", "sushi", "pasta", "coffee"];
+  const placeholders = ["restaurants", "biryani", "pizza", "burgers", "chicken", "paneer", "coffee"];
   const [placeholderIndex, setPlaceholderIndex] = useState(0);
   const [showSearchResults, setShowSearchResults] = useState(false);
   useEffect(() => {
@@ -20,7 +20,7 @@ const Navbar = ({ toggleSidebar }) => {
       setPlaceholderIndex((placeholderIndex + 1) % placeholders.length);
     }, 3000);
     return () => clearInterval(interval);
-  }, [placeholderIndex]);
+  }, [placeholderIndex, placeholders.length]);
   const navigate = useNavigate();
   const { user, logout } = useContext(AuthContext);
   useEffect(() => {
@@ -70,9 +70,8 @@ const Navbar = ({ toggleSidebar }) => {
             <p className="px-2 self-center hidden md:block font-serif text-lg font-extrabold border-r-4 text-yellow-500 border-yellow-600">Order Ahead</p>
           </Link>
           {!isManager && (
-            <div className="relative w-full sm:w-64 md:w-96 lg:w-128 ">
+            <div ref={searchInputRef} className="relative w-full sm:w-64 md:w-96 lg:w-128 ">
               <input
-                ref={searchInputRef}
                 onChange={(e) => {
                   handleSearch(e.target.value);
                 }}

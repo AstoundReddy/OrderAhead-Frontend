@@ -3,6 +3,7 @@ import React from "react";
 import Rating from "../Rating";
 export default function OrderTable({ orders, setSelectedOrderId, showPickupDatetime, showUserRating }) {
   const options = {
+    timeZone: "Asia/Kolkata",
     year: "numeric",
     month: "short", // "short" for abbreviated month name.
     day: "2-digit",
@@ -34,15 +35,15 @@ export default function OrderTable({ orders, setSelectedOrderId, showPickupDatet
               {order?.user?.phoneNumber}{" "}
             </td>
             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-              {new Date(order.orderDatetime).toLocaleString("en-US", options)}
+              {new Date(order.orderDatetime + "Z").toLocaleString("en-IN", options)}
               <br />
-              {moment(order.orderDatetime).fromNow()}
+              {moment(order.orderDatetime + "Z").fromNow()}
             </td>
             {showPickupDatetime && (
               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                {new Date(order.pickupDatetime).toLocaleString("en-US", options)}
+                {new Date(order.pickupDatetime + "Z").toLocaleString("en-IN", options)}
                 <br />
-                {moment(order.pickupDatetime).fromNow()}
+                {moment(order.pickupDatetime + "Z").fromNow()}
               </td>
             )}
             <td className="px-6 py-4 font-semibold whitespace-nowrap text-sm text-gray-500">{order?.totalPrice}</td>

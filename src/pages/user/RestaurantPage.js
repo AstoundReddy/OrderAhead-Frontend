@@ -10,6 +10,7 @@ import { toast } from "react-toastify";
 import Loading from "../../assets/loading2svg.svg";
 import RestaurantStatus from "../../components/HomePage/RestaurantStatus";
 import { getRestaurantStatus } from "../../helper/getRestaurantStatus";
+import Rating from "../../components/Rating";
 
 ReactModal.setAppElement("#root");
 const RestaurantPage = () => {
@@ -105,9 +106,10 @@ const RestaurantPage = () => {
         <h2 className="text-2xl font-bold mb-4 text-yellow-600">Order Details</h2>
         {Object.keys(cart).map((itemId) => {
           const item = restaurantDetails.menuItems.find((item) => item.itemId === parseInt(itemId));
+          const imageUrl = `https://source.unsplash.com/200x200/?restaurant,${itemId}`;
           return (
             <div key={itemId} className="flex max-h-fit overflow-auto items-start justify-between w-full mb-4">
-              <img className="w-16 h-16 rounded mr-4" src={item.image} alt={item.name} />
+              <img className="w-16 h-16 rounded mr-4" src={imageUrl} alt={item.name} />
               <div className="flex-1">
                 <h3 className="text-lg font-bold">{item.name}</h3>
                 <p>Price: ₹{item.price}</p>
@@ -158,6 +160,7 @@ const RestaurantPage = () => {
             {restaurantDetails.location} | {restaurantDetails.cuisineType} | {restaurantDetails.phoneNumber}
           </div>
           <span className="text-lg font-semibold">
+            {/* <Rating rating={restaurantDetails.averageRating || 0} /> */}
             <span className="text-yellow-500">★</span>
             <span className="ml-1">{restaurantDetails.averageRating || 0}</span>
             <span className="ml-2 text-gray-600">({restaurantDetails.numRatings || 0} ratings)</span>
